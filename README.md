@@ -1,2 +1,2 @@
 # drug_insights_hub
-A platform that aggregates information on pharmaceutical research, clinical trials, and drug development.
+A platform that aggregates information on pharmaceutical research, clinical trials, and drug development. Users can stay informed about the latest advancements in the field, to participate in researches and make publications.
