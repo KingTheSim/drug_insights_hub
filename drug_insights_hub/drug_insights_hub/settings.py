@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drug_insights_hub.accounts',
+    'drug_insights_hub.core',
+    'drug_insights_hub.research',
+    'drug_insights_hub.affiliations',
 ]
 
 MIDDLEWARE = [
