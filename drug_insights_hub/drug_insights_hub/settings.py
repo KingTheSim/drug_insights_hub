@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'drug_insights_hub.accounts',
     'drug_insights_hub.core',
     'drug_insights_hub.research',
-    'drug_insights_hub.affiliations',
 ]
 
 MIDDLEWARE = [
