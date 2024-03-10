@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+USER_MODEL = get_user_model()
+
 
 class Affiliation(models.Model):
     MAX_NAME_LENGTH = 50
@@ -15,7 +17,7 @@ class Affiliation(models.Model):
         return self.name
 
 
-class UserProfileModel(models.Model):
+class UserProfile(models.Model):
     MAX_SPECIALIZATION_LENGTH = 50
     CHOICES_SPECIALIZATION = (
         ("Not a specialist", "Not a specialist"),
@@ -29,8 +31,6 @@ class UserProfileModel(models.Model):
         ("Biostatistician", "Biostatistician"),
     )
 
-    USER_MODEL = get_user_model()
-
     bio = models.TextField(blank=True, null=True)
     interests = models.TextField(blank=True, null=True)
     affiliation = models.ForeignKey(Affiliation, on_delete=models.DO_NOTHING, blank=True, null=True)
@@ -39,4 +39,3 @@ class UserProfileModel(models.Model):
 
     def __str__(self) -> str:
         return self.user.get_full_name()
-    
