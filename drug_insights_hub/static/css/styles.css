@@ -1,0 +1,11 @@
+div .navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+div .navbar li {
+    display: inline; /* or inline-block */
+    /* Optionally, you can add some spacing between the list items */
+    margin-right: 10px; /* Adjust as needed */
+}

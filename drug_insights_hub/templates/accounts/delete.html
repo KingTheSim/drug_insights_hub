@@ -1,0 +1,9 @@
+{% extends 'base.html' %} {% block title %}Delete User{% endblock %} {% block
+content %}
+<p>Are you sure you want to delete your account?</p>
+<form action="{% url 'delete_user '%}" method="post">
+  {% csrf_token %}
+  <button type="submit" name="delete">Delete</button>
+
+  {% endblock %}
+</form>
