@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from drug_insights_hub.accounts.models import Affiliation
 
+USER_MODEL = get_user_model()
+
 class Drug(models.Model):
     MAX_PROPRIETARY_NAME_LENGTH = 50
 
@@ -56,6 +58,7 @@ class ClinicalTrial(models.Model):
     title = models.CharField(max_length=MAX_TITLE_LENGTH, unique=True)
     drug = models.ForeignKey(Drug, on_delete=models.DO_NOTHING)
     phase = models.CharField(max_length=MAX_PHASE_LENGTH, choices=CHOICES_PHASE_STATUS)
+    participants = models.ManyToManyField(USER_MODEL)
     affiliation = models.ForeignKey(Affiliation, on_delete=models.DO_NOTHING)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -79,8 +82,6 @@ class ClinicalTrial(models.Model):
 
 class Publication(models.Model):
     MAX_TITLE_LENGTH = 30
-
-    USER_MODEL = get_user_model()
 
     MAX_JOURNAL_LENGTH = 30
 

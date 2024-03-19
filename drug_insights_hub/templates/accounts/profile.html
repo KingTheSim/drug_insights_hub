@@ -3,5 +3,8 @@
 {% block content %}
     <p>Username: {{ request.user.username }}</p>
     <p>Full name: {{ user.get_full_name }}</p>
-    <p>Bio: {{ user.userprofile_set.bio }}</p>
+    <p>Bio: {{ user.userprofile.bio }}</p>
+    <p>Interests: {{ user.userprofile.interests }}</p>
+    <p>Affiliation: {{ user.userprofile.affiliation }}</p>
+    <p>Specialization: {{ user.userprofile.specialization }}</p>
 {% endblock %}

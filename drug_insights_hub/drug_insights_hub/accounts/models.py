@@ -35,7 +35,7 @@ class UserProfile(models.Model):
     interests = models.TextField(blank=True, null=True)
     affiliation = models.ForeignKey(Affiliation, on_delete=models.DO_NOTHING, blank=True, null=True)
     specialization = models.CharField(max_length=MAX_SPECIALIZATION_LENGTH, choices=CHOICES_SPECIALIZATION, default="Not a specialist")
-    user = models.OneToOneField(USER_MODEL, on_delete=models.CASCADE, primary_key=True, name="user")
+    user = models.OneToOneField(USER_MODEL, on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self) -> str:
         return self.user.get_full_name()
