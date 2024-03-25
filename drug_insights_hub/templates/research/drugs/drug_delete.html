@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Delete Drug{% endblock %}
+{% block content %}
+<form action="{% url 'drug_delete' pk=pk %}" method="post">
+  {{ form.as_p }} {% csrf_token %}
+  <h1>Are you certain you want to delete this drug?</h1>
+  <button type="submit">Yes</button>
+  <a href="{% url 'index' %}">Cancel</a>
+</form>
+{% endblock %}

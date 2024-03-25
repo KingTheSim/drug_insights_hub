@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Publication Creation{% endblock %}
+{% block content %}
+    <form action="{% url 'publication_creation' %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button type="submit">Create Publication</button>
+    </form>
+{% endblock %}

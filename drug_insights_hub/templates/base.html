@@ -5,17 +5,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
   </head>
   <body>
     <div>
       <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Trials</a></li>
+        <li><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="{% url 'affiliated_drugs_list' %}">Affiliation Drugs</a></li>
         <li><a href="{% url 'profile' %}">Profile</a></li>
         <li><a href="{% url 'login' %}">Login</a></li>
         <li><a href="{% url 'register' %}">Register</a></li>
-        <li><a href="#">About</a></li>
+        {% block additional_buttons %}{% endblock %}
       </ul>
     </div>
     {% block content %}{% endblock %}

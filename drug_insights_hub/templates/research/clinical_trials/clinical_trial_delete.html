@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}"Delete Clinical Trial"{% endblock %}
+{% block content %}
+    <form action="{% url 'clinical_trial_delete' pk=pk %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button type="submit">Yes</button>
+        <a href="{% url 'index' %}">Cancel</a>
+    </form>
+{% endblock %}

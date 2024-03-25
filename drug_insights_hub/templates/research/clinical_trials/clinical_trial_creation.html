@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}"Clinical Trial Creation"{% endblock %}
+{% block content %}
+    <form action="{% url 'clinical_trial_creation' %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button type="submit">Create Clinical Trial</button>
+    </form>
+{% endblock %}

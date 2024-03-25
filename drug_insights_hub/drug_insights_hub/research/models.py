@@ -87,6 +87,7 @@ class Publication(models.Model):
 
     title = models.CharField(max_length=MAX_TITLE_LENGTH, unique=True)
     authors = models.ManyToManyField(USER_MODEL)
+    trials = models.ManyToManyField(ClinicalTrial)
     affiliation = models.ForeignKey(Affiliation, on_delete=models.DO_NOTHING)
     publication_date = models.DateField(auto_now_add=True)
     modification_date = models.DateField(auto_now=True)
