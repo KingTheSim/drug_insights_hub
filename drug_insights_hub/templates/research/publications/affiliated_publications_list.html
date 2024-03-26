@@ -2,9 +2,28 @@
 {% block title %}Affiliated Publications List{% endblock %}
 {% block additional_buttons%}<li><a href="{% url 'publication_creation' %}">Create Publication</a></li>{% endblock %}
 {% block content %}
-    {% for obj in page_obj %}
-
-    {% endfor %}
+    <div>
+        {% for obj in page_obj %}
+        <div>
+            <p>Title {{ obj.title }}</p>
+            <p>Authors
+            {% for auth in obj.authors.all %}
+                {{ auth.get_full_name }}
+            {% endfor %}
+            </p>
+            <p>Trials
+            {% for trial in obj.trials.all %}
+                <a href="{% url 'clinical_trial_details' pk=trial.pk %}">{{ trial.title }}</a>
+            {% endfor %}
+            </p>
+            <p>Affiliation {{ obj.affiliation.name }}</p>
+            <p>Publication date {{ obj.publication_date }}</p>
+            <p>Journal {{ obj.journal }}</p>
+            <p><a href="{% url 'publication_update' pk=obj.pk %}">Update Publication</a></p>
+            <p><a href="{% url 'publication_delete' pk=obj.pk %}">Delete Publication</a></p>
+        </div>
+        {% endfor %}
+    </div>
     <div>
         <span>
             {% if page_obj.has_previous %}

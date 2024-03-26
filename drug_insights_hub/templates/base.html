@@ -18,6 +18,10 @@
           <li><a href="{% url 'affiliated_clinical_trials_list' %}">Affiliated Clinical Trials List</a></li>
           <li><a href="{% url 'affiliated_publications_list' %}">Affiliated Publications List</a></li>
           <li><a href="{% url 'profile' %}">Profile</a></li>
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
         {% else %}
           <li><a href="{% url 'login' %}">Login</a></li>
           <li><a href="{% url 'register' %}">Register</a></li>
