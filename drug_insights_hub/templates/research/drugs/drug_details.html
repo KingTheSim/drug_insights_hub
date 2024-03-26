@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}{{ drug.proprietary_name }}{% endblock %}
+{% block additional_buttons %}
+    <li><a href="{% url 'drug_creation' %}">Register a drug</a></li>
+{% endblock %}
+{% block content %}
+    <p>Proprietary name: {{ drug.proprietary_name }}</p>
+    <p>INN: {{ drug.international_non_proprietary_name }}</p>
+    <p>Affiliated_institution: {{ drug.affiliated_institution }}</p>
+    <p>Drug type: {{ drug.drug_type }}</p>
+    <p>Development status: {{ drug.development_status }}</p>
+    <p>Description: {{ drug.description }}</p>
+    {% if has_rights %}
+        <p><a href="{% url 'drug_update' pk=drug.pk %}">Update Drug</a></p>
+        <p><a href="{% url 'drug_delete' pk=drug.pk %}">Delete Drug</a></p>
+    {% endif %}
+{% endblock %}

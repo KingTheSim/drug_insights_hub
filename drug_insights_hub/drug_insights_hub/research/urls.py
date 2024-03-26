@@ -3,13 +3,18 @@ from django.urls import include, path
 from drug_insights_hub.research.views import (
     affiliated_clinical_trials_list,
     affiliated_drugs_list,
+    affiliated_publications_list,
     clinical_trial_creation,
     clinical_trial_delete,
+    clinical_trial_details,
     clinical_trial_update,
     drug_creation,
     drug_delete,
+    drug_details,
     drug_update,
     publication_creation,
+    publication_delete,
+    publication_update,
 )
 
 urlpatterns = [
@@ -28,6 +33,7 @@ urlpatterns = [
                     include(
                         [
                             path("update/", drug_update, name="drug_update"),
+                            path("details/", drug_details, name="drug_details"),
                             path("delete/", drug_delete, name="drug_delete"),
                         ]
                     ),
@@ -61,6 +67,11 @@ urlpatterns = [
                                 clinical_trial_delete,
                                 name="clinical_trial_delete",
                             ),
+                            path(
+                                "details/",
+                                clinical_trial_details,
+                                name="clinical_trial_details",
+                            ),
                         ]
                     ),
                 ),
@@ -72,6 +83,24 @@ urlpatterns = [
         include(
             [
                 path("create/", publication_creation, name="publication_creation"),
+                path(
+                    "affiliated_publications_list/",
+                    affiliated_publications_list,
+                    name="affiliated_publications_list",
+                ),
+                path(
+                    "<int:pk>/",
+                    include(
+                        [
+                            path(
+                                "update/", publication_update, name="publication_update"
+                            ),
+                            path(
+                                "delete/", publication_delete, name="publication_delete"
+                            ),
+                        ]
+                    ),
+                ),
             ]
         ),
     ),

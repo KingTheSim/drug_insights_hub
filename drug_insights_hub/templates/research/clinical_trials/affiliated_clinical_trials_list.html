@@ -4,7 +4,7 @@
 {% block content %}
     {% for obj in page_obj %}
         <p>Title {{ obj.title }}</p>
-        <p>Drug Proprietary Name {{ obj.drug.proprietary_name }}</p>
+        <p>Drug <a href="{% url 'drug_details' pk=obj.drug.pk %}">{{ obj.drug.proprietary_name }}</a></p>
         <p>Phase {{ obj.phase }}</p>
         <p>Participants {% for participant in obj.participants.all %}
             {{ participant.get_full_name }}

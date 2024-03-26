@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}{{ clinical_trial.title }}{% endblock %}
+{% block additional_buttons %}<li><a href="{% url 'clinical_trial_creation' %}">Create Clinical Trial</a></li>{% endblock %}
+{% block content%}
+    <p>Title {{ obj.title }}</p>
+    <p>Drug <a href="{% url 'drug_details' pk=obj.drug.pk %}">{{ obj.drug.proprietary_name }}</a></p>
+    <p>Phase {{ obj.phase }}</p>
+    <p>Participants {% for participant in obj.participants.all %}
+        {{ participant.get_full_name }}
+    {% endfor %}</p>
+    <p>Affiliation {{ obj.affiliation.name }}</p>
+    <p>Start Date {{ obj.start_date }}</p>
+    <p>End Date {{ obj.end_date }}</p>
+    <p>Description {{ obj.description }}</p>
+    {% if has_rights %}
+        <p><a href="{% url 'clinical_trial_update' pk=obj.pk %}">Update</a></p>
+        <p><a href="{% url 'clinical_trial_delete' pk=obj.pk %}">Delete</a></p>
+    {% endif %}
+{% endblock %}
