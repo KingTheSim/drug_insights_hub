@@ -13,7 +13,16 @@ class DrugBaseForm(forms.ModelForm):
 
 
 class DrugCreationForm(DrugBaseForm):
-    pass
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(DrugCreationForm, self).__init__(*args, **kwargs)
+        if user and user.userprofile.affiliation:
+            self.fields['affiliated_institution'].initial = user.userprofile.affiliation
+            self.fields['affiliated_institution'].widget.attrs['readonly'] = True
+            self.fields['affiliated_institution'].widget.attrs['disabled'] = True
+            self.fields['affiliated_institution'].required = False
+    
+
 
 
 class DrugUpdateForm(DrugBaseForm):
@@ -51,7 +60,14 @@ class ClinicalTrialBaseForm(forms.ModelForm):
 
 
 class ClinicalTrialCreationForm(ClinicalTrialBaseForm):
-    pass
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(ClinicalTrialCreationForm, self).__init__(*args, **kwargs)
+        if user and user.userprofile.affiliation:
+            self.fields['affiliation'].initial = user.userprofile.affiliation
+            self.fields['affiliation'].widget.attrs['readonly'] = True
+            self.fields['affiliation'].widget.attrs['disabled'] = True
+            self.fields['affiliation'].required = False
 
 
 class ClinicalTrialUpdateForm(ClinicalTrialBaseForm):
@@ -77,7 +93,14 @@ class PublicationBaseForm(forms.ModelForm):
 
 
 class PublicationCreationForm(PublicationBaseForm):
-    pass
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(PublicationCreationForm, self).__init__(*args, **kwargs)
+        if user and user.userprofile.affiliation:
+            self.fields['affiliation'].initial = user.userprofile.affiliation
+            self.fields['affiliation'].widget.attrs['readonly'] = True
+            self.fields['affiliation'].widget.attrs['disabled'] = True
+            self.fields['affiliation'].required = False
 
 
 class PublicationUpdateForm(PublicationBaseForm):

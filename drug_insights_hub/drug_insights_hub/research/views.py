@@ -21,13 +21,15 @@ from drug_insights_hub.research.models import ClinicalTrial, Drug, Publication
 
 @login_required
 def drug_creation(request: HttpRequest) -> HttpResponse:
-    form = DrugCreationForm(request.POST or None)
+    form = DrugCreationForm(request.POST or None, user=request.user)
     if form.is_valid():
+        drug = form.save(commit=False)
+        drug.affiliated_institution = request.user.userprofile.affiliation
         form.save()
         return redirect("index")
     else:
         return render(
-            request, "research/drugs/drug_creation.html", {"form": form, "logged": True}
+            request, "research/drugs/drug_creation.html", {"form": form, "logged": True, }
         )
 
 
@@ -113,6 +115,8 @@ def drug_details(request: HttpRequest, pk: int) -> HttpResponse:
 def clinical_trial_creation(request: HttpRequest) -> HttpResponse:
     form = ClinicalTrialCreationForm(request.POST or None)
     if form.is_valid():
+        clinical_trial: ClinicalTrial = form.save(commit=False)
+        clinical_trial.affiliation = request.user.userprofile.affiliation
         form.save()
         return redirect("index")
     else:
@@ -211,6 +215,8 @@ def clinical_trial_details(request: HttpRequest, pk: int) -> HttpResponse:
 def publication_creation(request: HttpRequest) -> HttpResponse:
     form: PublicationCreationForm = PublicationCreationForm(request.POST or None)
     if form.is_valid():
+        publication: Publication = form.save(commit=False)
+        publication.affiliation = request.user.userprofile.affiliation
         form.save()
         return redirect("index")
     else:
