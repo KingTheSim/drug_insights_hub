@@ -12,10 +12,15 @@
     <div>
       <ul>
         <li><a href="{% url 'index' %}">Home</a></li>
-        <li><a href="{% url 'affiliated_drugs_list' %}">Affiliation Drugs</a></li>
-        <li><a href="{% url 'profile' %}">Profile</a></li>
-        <li><a href="{% url 'login' %}">Login</a></li>
-        <li><a href="{% url 'register' %}">Register</a></li>
+        
+        {% if logged %}
+          <li><a href="{% url 'affiliated_drugs_list' %}">Affiliation Drugs</a></li>
+          <li><a href="{% url 'affiliated_clinical_trials_list' %}">Affiliated Clinical Trials List</a></li>
+          <li><a href="{% url 'profile' %}">Profile</a></li>
+        {% else %}
+          <li><a href="{% url 'login' %}">Login</a></li>
+          <li><a href="{% url 'register' %}">Register</a></li>
+        {% endif %}
         {% block additional_buttons %}{% endblock %}
       </ul>
     </div>

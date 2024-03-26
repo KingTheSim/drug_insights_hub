@@ -1,6 +1,7 @@
 from django.urls import include, path
 
 from drug_insights_hub.research.views import (
+    affiliated_clinical_trials_list,
     affiliated_drugs_list,
     clinical_trial_creation,
     clinical_trial_delete,
@@ -17,7 +18,11 @@ urlpatterns = [
         include(
             [
                 path("create/", drug_creation, name="drug_creation"),
-                path("affiliated_drugs_list/", affiliated_drugs_list, name="affiliated_drugs_list"),
+                path(
+                    "affiliated_drugs_list/",
+                    affiliated_drugs_list,
+                    name="affiliated_drugs_list",
+                ),
                 path(
                     "<int:pk>/",
                     include(
@@ -36,6 +41,11 @@ urlpatterns = [
             [
                 path(
                     "create/", clinical_trial_creation, name="clinical_trial_creation"
+                ),
+                path(
+                    "affiliated_clinical_trials_list/",
+                    affiliated_clinical_trials_list,
+                    name="affiliated_clinical_trials_list",
                 ),
                 path(
                     "<int:pk>/",
@@ -57,7 +67,12 @@ urlpatterns = [
             ]
         ),
     ),
-    path("publications/", include([
-        path("create/", publication_creation, name="publication_creation"),
-    ]))
+    path(
+        "publications/",
+        include(
+            [
+                path("create/", publication_creation, name="publication_creation"),
+            ]
+        ),
+    ),
 ]

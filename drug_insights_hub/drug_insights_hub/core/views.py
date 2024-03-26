@@ -12,8 +12,14 @@ def index(request: HttpRequest) -> HttpResponse:
     paginator: Paginator = Paginator(publications, per_page=per_page)
     page_number: int = request.GET.get("page")
     page_obj: Page = paginator.get_page(page_number)
+
+    if request.user.is_authenticated:
+        logged = True
+    else:
+        logged = False
+
     return render(
         request=request,
         template_name="core/index.html",
-        context={"page_obj": page_obj},
+        context={"page_obj": page_obj, "logged": logged},
     )

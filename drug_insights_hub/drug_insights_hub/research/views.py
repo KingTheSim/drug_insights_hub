@@ -24,7 +24,9 @@ def drug_creation(request: HttpRequest) -> HttpResponse:
         form.save()
         return redirect("index")
     else:
-        return render(request, "research/drugs/drug_creation.html", {"form": form})
+        return render(
+            request, "research/drugs/drug_creation.html", {"form": form, "logged": True}
+        )
 
 
 @login_required
@@ -44,7 +46,7 @@ def drug_update(request: HttpRequest, pk: int) -> HttpResponse:
         return render(
             request,
             "research/drugs/drug_update.html",
-            {"form": form, "drug": drug, "pk": pk},
+            {"form": form, "drug": drug, "pk": pk, "logged": True},
         )
 
 
@@ -63,7 +65,9 @@ def drug_delete(request: HttpRequest, pk: int) -> HttpResponse:
         return redirect("index")
     else:
         return render(
-            request, "research/drugs/drug_delete.html", {"form": form, "pk": pk}
+            request,
+            "research/drugs/drug_delete.html",
+            {"form": form, "pk": pk, "logged": True},
         )
 
 
@@ -82,7 +86,7 @@ def affiliated_drugs_list(request: HttpRequest) -> HttpResponse:
     return render(
         request=request,
         template_name="research/drugs/affiliated_drugs_list.html",
-        context={"page_obj": page_obj},
+        context={"page_obj": page_obj, "logged": True},
     )
 
 
@@ -96,7 +100,7 @@ def clinical_trial_creation(request: HttpRequest) -> HttpResponse:
         return render(
             request,
             "research/clinical_trials/clinical_trial_creation.html",
-            {"form": form},
+            {"form": form, "logged": True},
         )
 
 
@@ -118,7 +122,7 @@ def clinical_trial_update(request: HttpRequest, pk: int) -> HttpResponse:
         return render(
             request,
             "research/clinical_trials/clinical_trial_update.html",
-            {"form": form, "pk": pk},
+            {"form": form, "pk": pk, "logged": True},
         )
 
 
@@ -140,8 +144,27 @@ def clinical_trial_delete(request: HttpRequest, pk: int) -> HttpResponse:
         return render(
             request,
             "research/clinical_trials/clinical_trial_delete.html",
-            {"form": form, "pk": pk},
+            {"form": form, "pk": pk, "logged": True},
         )
+
+
+@login_required
+def affiliated_clinical_trials_list(request: HttpRequest) -> HttpResponse:
+    user_affiliation: Affiliation = request.user.userprofile.affiliation
+    clinical_trials: QuerySet[ClinicalTrial] = (
+        ClinicalTrial.objects.filter(affiliation=user_affiliation)
+        .order_by("title")
+        .all()
+    )
+    per_page: int = 10
+    paginator: Paginator = Paginator(clinical_trials, per_page=per_page)
+    page_number: int = request.GET.get("page")
+    page_obj: Page = paginator.get_page(page_number)
+    return render(
+        request=request,
+        template_name="research/clinical_trials/affiliated_clinical_trials_list.html",
+        context={"page_obj": page_obj, "logged": True},
+    )
 
 
 @login_required
@@ -154,5 +177,5 @@ def publication_creation(request: HttpRequest) -> HttpResponse:
         return render(
             request=request,
             template_name="research/publications/publication_creation.html",
-            context={"form": form},
+            context={"form": form, "logged": True},
         )
