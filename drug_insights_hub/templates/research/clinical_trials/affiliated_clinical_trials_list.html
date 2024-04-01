@@ -2,8 +2,20 @@
 {% block title %}Affiliated Clinical Trials List{% endblock %}
 {% block additional_buttons %}<li><a href="{% url 'clinical_trial_creation' %}">Create Clinical Trial</a></li>{% endblock %}
 {% block content %}
-    {% for obj in page_obj %}
-        <p>Title {{ obj.title }}</p>
+<!-- ======= Services Section ======= -->
+<section id="services" class="services">
+    <div class="container">
+
+      <div class="section-title">
+        <h2>Affiliated Clinical Trials</h2>
+        <p>All the Clinical Trials affiliated with your affiliated Institution.</p>
+      </div>
+
+      <div class="row">
+        {% for obj in page_obj %}
+            <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
+                <div class="icon-box">
+                    <p>Title {{ obj.title }}</p>
         <p>Drug <a href="{% url 'drug_details' pk=obj.drug.pk %}">{{ obj.drug.proprietary_name }}</a></p>
         <p>Phase {{ obj.phase }}</p>
         <p>Participants {% for participant in obj.participants.all %}
@@ -15,7 +27,13 @@
         <p>Description {{ obj.description }}</p>
         <p><a href="{% url 'clinical_trial_update' pk=obj.pk %}">Update</a></p>
         <p><a href="{% url 'clinical_trial_delete' pk=obj.pk %}">Delete</a></p>
-    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+
+    </div>
+  </section><!-- End Services Section -->
     <div>
         <span>
             {% if page_obj.has_previous%}

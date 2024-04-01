@@ -113,7 +113,7 @@ def drug_details(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def clinical_trial_creation(request: HttpRequest) -> HttpResponse:
-    form = ClinicalTrialCreationForm(request.POST or None)
+    form = ClinicalTrialCreationForm(request.POST or None, user=request.user)
     if form.is_valid():
         clinical_trial: ClinicalTrial = form.save(commit=False)
         clinical_trial.affiliation = request.user.userprofile.affiliation
@@ -213,7 +213,7 @@ def clinical_trial_details(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def publication_creation(request: HttpRequest) -> HttpResponse:
-    form: PublicationCreationForm = PublicationCreationForm(request.POST or None)
+    form: PublicationCreationForm = PublicationCreationForm(request.POST or None, user=request.user)
     if form.is_valid():
         publication: Publication = form.save(commit=False)
         publication.affiliation = request.user.userprofile.affiliation
