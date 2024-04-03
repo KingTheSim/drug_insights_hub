@@ -21,57 +21,62 @@ from drug_insights_hub.research.models import ClinicalTrial, Drug, Publication
 
 @login_required
 def drug_creation(request: HttpRequest) -> HttpResponse:
-    form = DrugCreationForm(request.POST or None, user=request.user)
+    form: DrugCreationForm = DrugCreationForm(request.POST or None, user=request.user)
     if form.is_valid():
-        drug = form.save(commit=False)
+        drug: Drug = form.save(commit=False)
         drug.affiliated_institution = request.user.userprofile.affiliation
         form.save()
         return redirect("index")
     else:
         return render(
-            request, "research/drugs/drug_creation.html", {"form": form, "logged": True, }
+            request=request,
+            template_name="research/drugs/drug_creation.html",
+            context={
+                "form": form,
+                "logged": True,
+            },
         )
 
 
 @login_required
 def drug_update(request: HttpRequest, pk: int) -> HttpResponse:
-    drug = get_object_or_404(Drug, id=pk)
+    drug: Drug = get_object_or_404(Drug, id=pk)
 
-    user_affiliation = request.user.userprofile.affiliation
+    user_affiliation: Affiliation = request.user.userprofile.affiliation
 
     if user_affiliation != drug.affiliated_institution:
         return HttpResponseForbidden("You do not have permission to update this drug.")
 
-    form = DrugUpdateForm(request.POST or None, instance=drug)
+    form: DrugUpdateForm = DrugUpdateForm(request.POST or None, instance=drug)
     if form.is_valid():
         form.save()
         return redirect("index")
     else:
         return render(
-            request,
-            "research/drugs/drug_update.html",
-            {"form": form, "drug": drug, "pk": pk, "logged": True},
+            request=request,
+            template_name="research/drugs/drug_update.html",
+            context={"form": form, "drug": drug, "pk": pk, "logged": True},
         )
 
 
 @login_required
 def drug_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    drug = get_object_or_404(Drug, id=pk)
+    drug: Drug = get_object_or_404(Drug, id=pk)
 
-    user_affiliation = request.user.userprofile.affiliation
+    user_affiliation: Affiliation = request.user.userprofile.affiliation
 
     if user_affiliation != drug.affiliated_institution:
         return HttpResponseForbidden("You do not have permission to delete this drug.")
 
-    form = DrugDeleteForm(request.POST or None, instance=drug)
+    form: DrugDeleteForm = DrugDeleteForm(request.POST or None, instance=drug)
     if form.is_valid():
         drug.delete()
         return redirect("index")
     else:
         return render(
-            request,
-            "research/drugs/drug_delete.html",
-            {"form": form, "pk": pk, "logged": True},
+            request=request,
+            template_name="research/drugs/drug_delete.html",
+            context={"form": form, "pk": pk, "logged": True},
         )
 
 
@@ -105,15 +110,17 @@ def drug_details(request: HttpRequest, pk: int) -> HttpResponse:
             has_rights = True
 
     return render(
-        request,
-        "research/drugs/drug_details.html",
-        {"drug": drug, "has_rights": has_rights, "logged": logged},
+        request=request,
+        template_name="research/drugs/drug_details.html",
+        content_type={"drug": drug, "has_rights": has_rights, "logged": logged},
     )
 
 
 @login_required
 def clinical_trial_creation(request: HttpRequest) -> HttpResponse:
-    form = ClinicalTrialCreationForm(request.POST or None, user=request.user)
+    form: ClinicalTrialCreationForm = ClinicalTrialCreationForm(
+        request.POST or None, user=request.user
+    )
     if form.is_valid():
         clinical_trial: ClinicalTrial = form.save(commit=False)
         clinical_trial.affiliation = request.user.userprofile.affiliation
@@ -121,53 +128,57 @@ def clinical_trial_creation(request: HttpRequest) -> HttpResponse:
         return redirect("index")
     else:
         return render(
-            request,
-            "research/clinical_trials/clinical_trial_creation.html",
-            {"form": form, "logged": True},
+            request=request,
+            template_name="research/clinical_trials/clinical_trial_creation.html",
+            context={"form": form, "logged": True},
         )
 
 
 @login_required
 def clinical_trial_update(request: HttpRequest, pk: int) -> HttpResponse:
-    clinical_trial = get_object_or_404(ClinicalTrial, pk=pk)
-    user_affiliation = request.user.userprofile.affiliation
+    clinical_trial: ClinicalTrial = get_object_or_404(ClinicalTrial, pk=pk)
+    user_affiliation: Affiliation = request.user.userprofile.affiliation
 
     if user_affiliation != clinical_trial.affiliation:
         return HttpResponseForbidden(
             "You do not have permission to update this clinical trial."
         )
 
-    form = ClinicalTrialUpdateForm(request.POST or None, instance=clinical_trial)
+    form: ClinicalTrialUpdateForm = ClinicalTrialUpdateForm(
+        request.POST or None, instance=clinical_trial
+    )
     if form.is_valid():
         form.save()
         return redirect("index")
     else:
         return render(
-            request,
-            "research/clinical_trials/clinical_trial_update.html",
-            {"form": form, "pk": pk, "logged": True},
+            request=request,
+            template_name="research/clinical_trials/clinical_trial_update.html",
+            context={"form": form, "pk": pk, "logged": True},
         )
 
 
 @login_required
 def clinical_trial_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    clinical_trial = get_object_or_404(ClinicalTrial, pk=pk)
-    user_affiliation = request.user.userprofile.affiliation
+    clinical_trial: ClinicalTrial = get_object_or_404(ClinicalTrial, pk=pk)
+    user_affiliation: Affiliation = request.user.userprofile.affiliation
 
     if user_affiliation != clinical_trial.affiliation:
         return HttpResponseForbidden(
             "You do not have permission to delete this clinical trial."
         )
 
-    form = ClinicalTrialDeleteForm(request.POST or None, instance=clinical_trial)
+    form: ClinicalTrialDeleteForm = ClinicalTrialDeleteForm(
+        request.POST or None, instance=clinical_trial
+    )
     if form.is_valid():
         clinical_trial.delete()
         return redirect("index")
     else:
         return render(
-            request,
-            "research/clinical_trials/clinical_trial_delete.html",
-            {"form": form, "pk": pk, "logged": True},
+            request=request,
+            template_name="research/clinical_trials/clinical_trial_delete.html",
+            context={"form": form, "pk": pk, "logged": True},
         )
 
 
@@ -213,7 +224,9 @@ def clinical_trial_details(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def publication_creation(request: HttpRequest) -> HttpResponse:
-    form: PublicationCreationForm = PublicationCreationForm(request.POST or None, user=request.user)
+    form: PublicationCreationForm = PublicationCreationForm(
+        request.POST or None, user=request.user
+    )
     if form.is_valid():
         publication: Publication = form.save(commit=False)
         publication.affiliation = request.user.userprofile.affiliation

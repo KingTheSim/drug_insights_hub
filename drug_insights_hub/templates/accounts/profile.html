@@ -2,6 +2,7 @@
 {% block title %}Profile{% endblock %}
 {% block additional_buttons %}
     <li><a href="{% url 'profile_update' %}">Update Profile</a></li>
+    <li><a href="{% url 'delete_user' %}">Delete Profile</a></li>
 {% endblock %}
 {% block content %}
     <p>Username: {{ request.user.username }}</p>
