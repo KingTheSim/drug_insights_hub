@@ -11,10 +11,10 @@ class Affiliation(models.Model):
     MAX_NAME_LENGTH: int = 50
     MAX_LOCATION_LENGTH: int = 150
 
-    name: str = models.CharField(max_length=MAX_NAME_LENGTH, unique=True)
-    location: str = models.CharField(max_length=MAX_LOCATION_LENGTH)
-    description: str = models.TextField()
-    website: str = models.URLField()
+    name: models.CharField = models.CharField(max_length=MAX_NAME_LENGTH, unique=True)
+    location: models.CharField = models.CharField(max_length=MAX_LOCATION_LENGTH)
+    description: models.TextField = models.TextField()
+    website: models.URLField = models.URLField()
 
     def __str__(self) -> str:
         return self.name
@@ -34,17 +34,17 @@ class UserProfile(models.Model):
         ("Biostatistician", "Biostatistician"),
     )
 
-    bio: Optional[str] = models.TextField(blank=True, null=True)
-    interests: Optional[str] = models.TextField(blank=True, null=True)
+    bio: Optional[models.TextField] = models.TextField(blank=True, null=True)
+    interests: Optional[models.TextField] = models.TextField(blank=True, null=True)
     affiliation: Optional[Affiliation] = models.ForeignKey(
         Affiliation, on_delete=models.DO_NOTHING, blank=True, null=True
     )
-    specialization: str = models.CharField(
+    specialization: models.CharField = models.CharField(
         max_length=MAX_SPECIALIZATION_LENGTH,
         choices=CHOICES_SPECIALIZATION,
         default="Not a specialist",
     )
-    user: Type[User] = models.OneToOneField(
+    user: User = models.OneToOneField(
         USER_MODEL, on_delete=models.CASCADE, primary_key=True
     )
 

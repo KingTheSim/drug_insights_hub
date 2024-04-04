@@ -12,19 +12,19 @@ USER_MODEL: Type[User] = get_user_model()
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        model = USER_MODEL
+        model: User = USER_MODEL
         fields: Tuple[str, str, str] = ("username", "first_name", "last_name")
 
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
-        model = USER_MODEL
+        model: User = USER_MODEL
         fields: Tuple[str, str, str] = ("username", "first_name", "last_name")
 
 
 class UserProfileBaseForm(forms.ModelForm):
     class Meta:
-        model = UserProfile
+        model: User = UserProfile
         exclude: Tuple[str, str] = ("affiliation", "user")
 
 

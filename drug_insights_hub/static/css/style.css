@@ -931,7 +931,7 @@ section {
   margin: 0 auto;
   width: 64px;
   height: 64px;
-  background: #37cc19;
+  background: #cad3c8;
   border-radius: 5px;
   transition: all 0.3s ease-out 0s;
   display: flex;
@@ -980,7 +980,7 @@ section {
 }
 
 .services .icon-box:hover {
-  background: #19cc4f;
+  background: #8d8b8b;
   border-color: #19cc40;
 }
 
@@ -989,7 +989,7 @@ section {
 }
 
 .services .icon-box:hover .icon i {
-  color: #19cc19;
+  color: #afffaf;
 }
 
 .services .icon-box:hover .icon::before {

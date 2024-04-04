@@ -1,34 +1,35 @@
+from typing import Tuple, Type
+
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 
 from drug_insights_hub.research.models import ClinicalTrial, Drug, Publication
 
-USER_MODEL = get_user_model()
+USER_MODEL: Type[User] = get_user_model()
 
 
 class DrugBaseForm(forms.ModelForm):
     class Meta:
-        model = Drug
-        fields = "__all__"
+        model: Type[Drug] = Drug
+        fields: str = "__all__"
 
 
 class DrugCreationForm(DrugBaseForm):
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+    def __init__(self, *args, **kwargs) -> None:
+        user: Type[User] = kwargs.pop("user", None)
         super(DrugCreationForm, self).__init__(*args, **kwargs)
         if user and user.userprofile.affiliation:
-            self.fields['affiliated_institution'].initial = user.userprofile.affiliation
-            self.fields['affiliated_institution'].widget.attrs['readonly'] = True
-            self.fields['affiliated_institution'].widget.attrs['disabled'] = True
-            self.fields['affiliated_institution'].required = False
-    
-
+            self.fields["affiliated_institution"].initial = user.userprofile.affiliation
+            self.fields["affiliated_institution"].widget.attrs["readonly"] = True
+            self.fields["affiliated_institution"].widget.attrs["disabled"] = True
+            self.fields["affiliated_institution"].required = False
 
 
 class DrugUpdateForm(DrugBaseForm):
     class Meta:
-        model = Drug
-        exclude = ("affiliated_institution",)
+        model: Type[Drug] = Drug
+        exclude: Tuple[str,] = ("affiliated_institution",)
 
 
 class DrugDeleteForm(DrugBaseForm):
@@ -37,43 +38,43 @@ class DrugDeleteForm(DrugBaseForm):
 
 class ClinicalTrialBaseForm(forms.ModelForm):
     class Meta:
-        model = ClinicalTrial
-        fields = "__all__"
+        model: Type[ClinicalTrial] = ClinicalTrial
+        fields: str = "__all__"
 
-    start_date = forms.DateField(
+    start_date: forms.DateField = forms.DateField(
         widget=forms.DateInput(
             attrs={
                 "type": "date",
             },
         )
     )
-    end_date = forms.DateField(
+    end_date: forms.DateField = forms.DateField(
         widget=forms.DateInput(
             attrs={
                 "type": "date",
             },
         )
     )
-    participants = forms.ModelMultipleChoiceField(
+    participants: forms.MultipleChoiceField = forms.ModelMultipleChoiceField(
         queryset=USER_MODEL.objects.all(), widget=forms.SelectMultiple
     )
 
 
 class ClinicalTrialCreationForm(ClinicalTrialBaseForm):
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+    def __init__(self, *args, **kwargs) -> None:
+        user: Type[User] = kwargs.pop("user", None)
         super(ClinicalTrialCreationForm, self).__init__(*args, **kwargs)
         if user and user.userprofile.affiliation:
-            self.fields['affiliation'].initial = user.userprofile.affiliation
-            self.fields['affiliation'].widget.attrs['readonly'] = True
-            self.fields['affiliation'].widget.attrs['disabled'] = True
-            self.fields['affiliation'].required = False
+            self.fields["affiliation"].initial = user.userprofile.affiliation
+            self.fields["affiliation"].widget.attrs["readonly"] = True
+            self.fields["affiliation"].widget.attrs["disabled"] = True
+            self.fields["affiliation"].required = False
 
 
 class ClinicalTrialUpdateForm(ClinicalTrialBaseForm):
     class Meta:
-        model = ClinicalTrial
-        exclude = (
+        model: Type[ClinicalTrial] = ClinicalTrial
+        exclude: Tuple[str, str] = (
             "drug",
             "affiliation",
         )
@@ -85,32 +86,32 @@ class ClinicalTrialDeleteForm(ClinicalTrialBaseForm):
 
 class PublicationBaseForm(forms.ModelForm):
     class Meta:
-        model = Publication
-        exclude = [
+        model: Type[Publication] = Publication
+        exclude: Tuple[str, str] = (
             "publication_date",
             "modification_date",
-        ]
+        )
 
 
 class PublicationCreationForm(PublicationBaseForm):
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        user: Type[User] = kwargs.pop("user", None)
         super(PublicationCreationForm, self).__init__(*args, **kwargs)
         if user and user.userprofile.affiliation:
-            self.fields['affiliation'].initial = user.userprofile.affiliation
-            self.fields['affiliation'].widget.attrs['readonly'] = True
-            self.fields['affiliation'].widget.attrs['disabled'] = True
-            self.fields['affiliation'].required = False
+            self.fields["affiliation"].initial = user.userprofile.affiliation
+            self.fields["affiliation"].widget.attrs["readonly"] = True
+            self.fields["affiliation"].widget.attrs["disabled"] = True
+            self.fields["affiliation"].required = False
 
 
 class PublicationUpdateForm(PublicationBaseForm):
     class Meta:
-        model = Publication
-        exclude = [
+        model: Type[Publication] = Publication
+        exclude: Tuple[str, str, str] = (
             "publication_date",
             "modification_date",
             "affiliation",
-        ]
+        )
 
 
 class PublicationDeleteForm(PublicationBaseForm):

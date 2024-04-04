@@ -1,7 +1,7 @@
 from typing import Type
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import User
 from django.core.paginator import Page, Paginator
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
@@ -11,10 +11,12 @@ from drug_insights_hub.research.models import ClinicalTrial, Drug, Publication
 
 
 def index(request: HttpRequest) -> HttpResponse:
-    user_type: Type[AbstractBaseUser] = get_user_model()
+    user_type: Type[User] = get_user_model()
     users_count: int = user_type.objects.count()
 
-    publications: QuerySet = Publication.objects.order_by("publication_date").all()
+    publications: QuerySet[Publication] = Publication.objects.order_by(
+        "publication_date"
+    ).all()
     publications_count: int = publications.count()
 
     clinical_trial_count: int = ClinicalTrial.objects.count()

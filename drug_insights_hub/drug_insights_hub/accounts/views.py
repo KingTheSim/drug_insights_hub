@@ -55,7 +55,7 @@ class UserLoginView(LoginView):
 
 
 class UserDeleteView(DeleteView, LoginRequiredMixin):
-    model: Type[User] = USER_MODEL
+    model: User = USER_MODEL
     template_name: str = "accounts/delete.html"
     success_url: str = reverse_lazy("index")
     custom_context: Dict[str, bool] = {"logged": True}
@@ -67,7 +67,7 @@ class UserDeleteView(DeleteView, LoginRequiredMixin):
 
 
 class UserDetailsView(DetailView, LoginRequiredMixin):
-    model: Type[User] = USER_MODEL
+    model: User = USER_MODEL
     template_name: str = "accounts/profile.html"
     context_object_name: str = "user"
     custom_context: Dict[str, bool] = {"logged": True}
