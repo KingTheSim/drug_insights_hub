@@ -15,8 +15,9 @@
 
       <div class="row">
         {% for obj in page_obj %}
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
-            <div class="icon-box">
+        <div class="col-6 col-md-4 card">
+            <div class="card-body">
+                <div class="col-10">
         <p>Proprietary name: {{ obj.proprietary_name }}</p>
         <p>INN: {{ obj.international_non_proprietary_name }}</p>
         <p>Affiliated_institution: {{ obj.affiliated_institution }}</p>
@@ -27,12 +28,13 @@
         <p><a href="{% url 'drug_delete' pk=obj.pk %}">Delete Drug</a></p>
             </div>
         </div>
+        </div>
     {% endfor %}
         </div>
 
     </div>
   </section><!-- End Services Section -->
-    <div>
+  <div class="pagination justify-content-center mt-4">
         <span>
             {% if page_obj.has_previous %}
                 <a href="?page=1">&laquo; first</a>

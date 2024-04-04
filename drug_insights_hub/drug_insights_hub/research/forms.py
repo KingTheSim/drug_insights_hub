@@ -24,12 +24,18 @@ class DrugCreationForm(DrugBaseForm):
             self.fields["affiliated_institution"].widget.attrs["readonly"] = True
             self.fields["affiliated_institution"].widget.attrs["disabled"] = True
             self.fields["affiliated_institution"].required = False
+        
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({"class": "form-control"})
 
 
 class DrugUpdateForm(DrugBaseForm):
     class Meta:
         model: Type[Drug] = Drug
         exclude: Tuple[str,] = ("affiliated_institution",)
+    
+    # def __init__(self, *args, **kwargs) -> None:
+    #     super().__init__(*args, **kwargs)
 
 
 class DrugDeleteForm(DrugBaseForm):

@@ -52,21 +52,21 @@
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
           <li><a href="{% url 'index' %}">Home</a></li>
-          
+          {% block additional_buttons %}{% endblock %}
           {% if logged %}
             <li><a class="nav-link scrollto" href="{% url 'affiliated_drugs_list' %}">Affiliation Drugs</a></li>
             <li><a class="nav-link scrollto" href="{% url 'affiliated_clinical_trials_list' %}">Affiliated Clinical Trials List</a></li>
             <li><a class="nav-link scrollto" href="{% url 'affiliated_publications_list' %}">Affiliated Publications List</a></li>
             <li><a class="nav-link scrollto" href="{% url 'profile' %}">Profile</a></li>
-            <form action="{% url 'logout' %}" method="post">
+            <li><form action="{% url 'logout' %}" method="post">
               {% csrf_token %}
-              <button type="submit">Logout</button>
-          </form>
+              <button type="submit" class="btn btn-danger">Logout</button>
+            </form></li>
           {% else %}
             <li><a class="nav-link scrollto" href="{% url 'login' %}">Login</a></li>
             <li><a class="nav-link scrollto" href="{% url 'register' %}">Register</a></li>
           {% endif %}
-          {% block additional_buttons %}{% endblock %}
+          
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -81,10 +81,9 @@
     </div>
   </section><!-- End Hero -->
 
-  <main id="main">
+<main id="main">
     {% block content %}{% endblock %}
-  </main><!-- End #main -->
-
+</main>
   <!-- ======= Footer ======= -->
   <footer id="footer">
 

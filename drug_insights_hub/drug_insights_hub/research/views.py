@@ -112,7 +112,7 @@ def drug_details(request: HttpRequest, pk: int) -> HttpResponse:
     return render(
         request=request,
         template_name="research/drugs/drug_details.html",
-        content_type={"drug": drug, "has_rights": has_rights, "logged": logged},
+        context={"drug": drug, "has_rights": has_rights, "logged": logged},
     )
 
 
