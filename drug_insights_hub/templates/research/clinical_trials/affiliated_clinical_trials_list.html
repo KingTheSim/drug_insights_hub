@@ -13,28 +13,30 @@
 
       <div class="row">
         {% for obj in page_obj %}
-            <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
-                <div class="icon-box">
-                    <p>Title {{ obj.title }}</p>
-        <p>Drug <a href="{% url 'drug_details' pk=obj.drug.pk %}">{{ obj.drug.proprietary_name }}</a></p>
-        <p>Phase {{ obj.phase }}</p>
-        <p>Participants {% for participant in obj.participants.all %}
-            {{ participant.get_full_name }}
-        {% endfor %}</p>
-        <p>Affiliation {{ obj.affiliation.name }}</p>
-        <p>Start Date {{ obj.start_date }}</p>
-        <p>End Date {{ obj.end_date }}</p>
-        <p>Description {{ obj.description }}</p>
-        <p><a href="{% url 'clinical_trial_update' pk=obj.pk %}">Update</a></p>
-        <p><a href="{% url 'clinical_trial_delete' pk=obj.pk %}">Delete</a></p>
-                </div>
+        <div class="col-6 col-md-4 card">
+            <div class="card-body">
+                <div class="col-10">
+                    <p>Title: <a href="{% url 'clinical_trial_details' pk=obj.pk %}" class="btn btn-outline-info">{{ obj.title }}</a></p>
+                    <p>Drug: <a href="{% url 'drug_details' pk=obj.drug.pk %}" class="btn btn-outline-info">{{ obj.drug.proprietary_name }}</a></p>
+                    <p>Phase: {{ obj.phase }}</p>
+                    <p>Participants: {% for participant in obj.participants.all %}
+                        {{ participant.get_full_name }}
+                    {% endfor %}</p>
+                    <p>Affiliation: {{ obj.affiliation.name }}</p>
+                    <p>Start Date: {{ obj.start_date }}</p>
+                    <p>End Date: {{ obj.end_date }}</p>
+                    <p>Description: {{ obj.description }}</p>
+                    <p><a href="{% url 'clinical_trial_update' pk=obj.pk %}" class="btn btn-outline-primary">Update</a></p>
+                    <p><a href="{% url 'clinical_trial_delete' pk=obj.pk %}" class="btn btn-outline-danger">Delete</a></p>
             </div>
-        {% endfor %}
+        </div>
+        </div>
+    {% endfor %}
         </div>
 
     </div>
   </section><!-- End Services Section -->
-    <div>
+    <div class="pagination justify-content-center mt-4 mb-2">
         <span>
             {% if page_obj.has_previous%}
                 <a href="?page=1">&laquo; first</a>

@@ -18,14 +18,14 @@
         <div class="col-6 col-md-4 card">
             <div class="card-body">
                 <div class="col-10">
-        <p>Proprietary name: {{ obj.proprietary_name }}</p>
+        <p>Proprietary name: <a href="{% url 'drug_details' pk=obj.pk %}" class="btn btn-outline-info">{{ obj.proprietary_name }}</a></p>
         <p>INN: {{ obj.international_non_proprietary_name }}</p>
         <p>Affiliated_institution: {{ obj.affiliated_institution }}</p>
         <p>Drug type: {{ obj.drug_type }}</p>
         <p>Development status: {{ obj.development_status }}</p>
         <p>Description: {{ obj.description }}</p>
-        <p><a href="{% url 'drug_update' pk=obj.pk %}">Update Drug</a></p>
-        <p><a href="{% url 'drug_delete' pk=obj.pk %}">Delete Drug</a></p>
+        <p><a href="{% url 'drug_update' pk=obj.pk %}" class="btn btn-outline-primary">Update Drug</a></p>
+        <p><a href="{% url 'drug_delete' pk=obj.pk %}" class="btn btn-outline-danger">Delete Drug</a></p>
             </div>
         </div>
         </div>
@@ -34,7 +34,7 @@
 
     </div>
   </section><!-- End Services Section -->
-  <div class="pagination justify-content-center mt-4">
+  <div class="pagination justify-content-center mt-4 mb-2">
         <span>
             {% if page_obj.has_previous %}
                 <a href="?page=1">&laquo; first</a>

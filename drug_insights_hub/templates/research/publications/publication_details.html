@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block title %}{{ publication.title }}{% endblock %} {% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 m-5">
+      <div class="card">
+        <div class="card-body">
+            <p>Title: {{ publication.title }}</p>
+            <p>Authors:
+            {% for auth in publication.authors.all %}
+                {{ auth.get_full_name }}
+            {% endfor %}
+            </p>
+            <p>Trials:
+            {% for trial in publication.trials.all %}
+                <a href="{% url 'clinical_trial_details' pk=trial.pk %}" class="btn btn-outline-info">{{ trial.title }}</a>
+            {% endfor %}
+            </p>
+            <p>Affiliation: {{ publication.affiliation.name }}</p>
+            <p>Publication date: {{ publication.publication_date }}</p>
+            <p>Journal: {{ publica.journal }}</p>
+            <p><a href="{% url 'publication_update' pk=publication.pk %}" class="btn btn-outline-primary">Update Publication</a></p>
+            <p><a href="{% url 'publication_delete' pk=publication.pk %}" class="btn btn-outline-danger">Delete Publication</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

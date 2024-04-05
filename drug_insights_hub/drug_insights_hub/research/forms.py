@@ -14,6 +14,11 @@ class DrugBaseForm(forms.ModelForm):
         model: Type[Drug] = Drug
         fields: str = "__all__"
 
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({"class": "form-control"})
+
 
 class DrugCreationForm(DrugBaseForm):
     def __init__(self, *args, **kwargs) -> None:
@@ -24,7 +29,7 @@ class DrugCreationForm(DrugBaseForm):
             self.fields["affiliated_institution"].widget.attrs["readonly"] = True
             self.fields["affiliated_institution"].widget.attrs["disabled"] = True
             self.fields["affiliated_institution"].required = False
-        
+
         for field in self.fields.keys():
             self.fields[field].widget.attrs.update({"class": "form-control"})
 
@@ -33,9 +38,6 @@ class DrugUpdateForm(DrugBaseForm):
     class Meta:
         model: Type[Drug] = Drug
         exclude: Tuple[str,] = ("affiliated_institution",)
-    
-    # def __init__(self, *args, **kwargs) -> None:
-    #     super().__init__(*args, **kwargs)
 
 
 class DrugDeleteForm(DrugBaseForm):
@@ -43,6 +45,11 @@ class DrugDeleteForm(DrugBaseForm):
 
 
 class ClinicalTrialBaseForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({"class": "form-control"})
+
     class Meta:
         model: Type[ClinicalTrial] = ClinicalTrial
         fields: str = "__all__"
@@ -76,6 +83,9 @@ class ClinicalTrialCreationForm(ClinicalTrialBaseForm):
             self.fields["affiliation"].widget.attrs["disabled"] = True
             self.fields["affiliation"].required = False
 
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({"class": "form-control"})
+
 
 class ClinicalTrialUpdateForm(ClinicalTrialBaseForm):
     class Meta:
@@ -91,6 +101,11 @@ class ClinicalTrialDeleteForm(ClinicalTrialBaseForm):
 
 
 class PublicationBaseForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({"class": "form-control"})
+
     class Meta:
         model: Type[Publication] = Publication
         exclude: Tuple[str, str] = (
@@ -108,6 +123,9 @@ class PublicationCreationForm(PublicationBaseForm):
             self.fields["affiliation"].widget.attrs["readonly"] = True
             self.fields["affiliation"].widget.attrs["disabled"] = True
             self.fields["affiliation"].required = False
+
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({"class": "form-control"})
 
 
 class PublicationUpdateForm(PublicationBaseForm):

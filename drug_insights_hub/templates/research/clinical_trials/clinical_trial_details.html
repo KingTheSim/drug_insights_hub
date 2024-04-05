@@ -2,18 +2,28 @@
 {% block title %}{{ clinical_trial.title }}{% endblock %}
 {% block additional_buttons %}<li><a href="{% url 'clinical_trial_creation' %}">Create Clinical Trial</a></li>{% endblock %}
 {% block content%}
-    <p>Title {{ clinical_trial.title }}</p>
-    <p>Drug <a href="{% url 'drug_details' pk=clinical_trial.drug.id %}">{{ clinical_trial.drug.proprietary_name }}</a></p>
-    <p>Phase {{ clinical_trial.phase }}</p>
-    <p>Participants {% for participant in clinical_trial.participants.all %}
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 m-5">
+        <div class="card">
+        <div class="card-body">
+    <p>Title: {{ clinical_trial.title }}</p>
+    <p>Drug: <a href="{% url 'drug_details' pk=clinical_trial.drug.id %}" class="btn btn-outline-info">{{ clinical_trial.drug.proprietary_name }}</a></p>
+    <p>Phase: {{ clinical_trial.phase }}</p>
+    <p>Participants: {% for participant in clinical_trial.participants.all %}
         {{ participant.get_full_name }}
     {% endfor %}</p>
-    <p>Affiliation {{ clinical_trial.affiliation.name }}</p>
-    <p>Start Date {{ clinical_trial.start_date }}</p>
-    <p>End Date {{ clinical_trial.end_date }}</p>
-    <p>Description {{ clinical_trial.description }}</p>
+    <p>Affiliation: {{ clinical_trial.affiliation.name }}</p>
+    <p>Start Date: {{ clinical_trial.start_date }}</p>
+    <p>End Date: {{ clinical_trial.end_date }}</p>
+    <p>Description: {{ clinical_trial.description }}</p>
     {% if has_rights %}
-        <p><a href="{% url 'clinical_trial_update' pk=clinical_trial.pk %}">Update</a></p>
-        <p><a href="{% url 'clinical_trial_delete' pk=clinical_trial.pk %}">Delete</a></p>
+        <p><a href="{% url 'clinical_trial_update' pk=clinical_trial.pk %}" class="btn btn-outline-primary">Update</a></p>
+        <p><a href="{% url 'clinical_trial_delete' pk=clinical_trial.pk %}" class="btn btn-outline-danger">Delete</a></p>
     {% endif %}
+    </div>
+</div>
+</div>
+</div>
+</div>
 {% endblock %}

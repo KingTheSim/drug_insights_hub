@@ -14,6 +14,7 @@ from drug_insights_hub.research.views import (
     drug_update,
     publication_creation,
     publication_delete,
+    publication_details,
     publication_update,
 )
 
@@ -97,6 +98,11 @@ urlpatterns = [
                             ),
                             path(
                                 "delete/", publication_delete, name="publication_delete"
+                            ),
+                            path(
+                                "details/",
+                                publication_details,
+                                name="publication_details",
                             ),
                         ]
                     ),

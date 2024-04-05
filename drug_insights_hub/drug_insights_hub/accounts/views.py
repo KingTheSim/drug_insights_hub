@@ -1,9 +1,11 @@
-from typing import Dict, Type
+from typing import Any, Dict, Type
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
+from django.db.models.base import Model as Model
+from django.db.models.query import QuerySet
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 
@@ -64,6 +66,9 @@ class UserDeleteView(DeleteView, LoginRequiredMixin):
         context: Dict[str, bool] = super().get_context_data(**kwargs)
         context.update(self.custom_context)
         return context
+    
+    def get_object(self, queryset = None) -> Model:
+        return self.request.user
 
 
 class UserDetailsView(DetailView, LoginRequiredMixin):

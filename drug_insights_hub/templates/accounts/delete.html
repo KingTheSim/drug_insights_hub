@@ -1,9 +1,20 @@
-{% extends 'base.html' %} {% block title %}Delete User{% endblock %} {% block
-content %}
+{% extends 'base.html' %} {% block title %}Delete User{% endblock %} {% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 m-5">
+      <div class="card">
+      <div class="card-body">
 <p>Are you sure you want to delete your account?</p>
-<form action="{% url 'delete_user '%}" method="post">
+<form action="{% url 'delete_user' %}" method="post">
   {% csrf_token %}
-  <button type="submit" name="delete">Delete</button>
-
-  {% endblock %}
+  <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+  <a href="{% url 'index' %}" class="btn btn-primary">Cancel</a>
 </form>
+</div>
+</div>
+</div>
+</div>
+</div>
+  {% endblock %}
+
+

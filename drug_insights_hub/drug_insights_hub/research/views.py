@@ -26,7 +26,7 @@ def drug_creation(request: HttpRequest) -> HttpResponse:
         drug: Drug = form.save(commit=False)
         drug.affiliated_institution = request.user.userprofile.affiliation
         form.save()
-        return redirect("index")
+        return redirect("affiliated_drugs_list")
     else:
         return render(
             request=request,
@@ -50,7 +50,7 @@ def drug_update(request: HttpRequest, pk: int) -> HttpResponse:
     form: DrugUpdateForm = DrugUpdateForm(request.POST or None, instance=drug)
     if form.is_valid():
         form.save()
-        return redirect("index")
+        return redirect("affiliated_drugs_list")
     else:
         return render(
             request=request,
@@ -71,7 +71,7 @@ def drug_delete(request: HttpRequest, pk: int) -> HttpResponse:
     form: DrugDeleteForm = DrugDeleteForm(request.POST or None, instance=drug)
     if form.is_valid():
         drug.delete()
-        return redirect("index")
+        return redirect("affiliated_drugs_list")
     else:
         return render(
             request=request,
@@ -88,7 +88,7 @@ def affiliated_drugs_list(request: HttpRequest) -> HttpResponse:
         .order_by("proprietary_name")
         .all()
     )
-    per_page: int = 10
+    per_page: int = 9
     paginator: Paginator = Paginator(drugs, per_page=per_page)
     page_number: int = request.GET.get("page")
     page_obj: Page = paginator.get_page(page_number)
@@ -125,7 +125,7 @@ def clinical_trial_creation(request: HttpRequest) -> HttpResponse:
         clinical_trial: ClinicalTrial = form.save(commit=False)
         clinical_trial.affiliation = request.user.userprofile.affiliation
         form.save()
-        return redirect("index")
+        return redirect("affiliated_clinical_trials_list")
     else:
         return render(
             request=request,
@@ -149,7 +149,7 @@ def clinical_trial_update(request: HttpRequest, pk: int) -> HttpResponse:
     )
     if form.is_valid():
         form.save()
-        return redirect("index")
+        return redirect("affiliated_clinical_trials_list")
     else:
         return render(
             request=request,
@@ -173,7 +173,7 @@ def clinical_trial_delete(request: HttpRequest, pk: int) -> HttpResponse:
     )
     if form.is_valid():
         clinical_trial.delete()
-        return redirect("index")
+        return redirect("affiliated_clinical_trials_list")
     else:
         return render(
             request=request,
@@ -190,7 +190,7 @@ def affiliated_clinical_trials_list(request: HttpRequest) -> HttpResponse:
         .order_by("title")
         .all()
     )
-    per_page: int = 10
+    per_page: int = 9
     paginator: Paginator = Paginator(clinical_trials, per_page=per_page)
     page_number: int = request.GET.get("page")
     page_obj: Page = paginator.get_page(page_number)
@@ -231,7 +231,7 @@ def publication_creation(request: HttpRequest) -> HttpResponse:
         publication: Publication = form.save(commit=False)
         publication.affiliation = request.user.userprofile.affiliation
         form.save()
-        return redirect("index")
+        return redirect("affiliated_publications_list")
     else:
         return render(
             request=request,
@@ -255,7 +255,7 @@ def publication_update(request: HttpRequest, pk: int) -> HttpResponse:
     )
     if form.is_valid():
         form.save()
-        return redirect("index")
+        return redirect("affiliated_publications_list")
     else:
         return render(
             request=request,
@@ -279,7 +279,7 @@ def publication_delete(request: HttpRequest, pk: int) -> HttpResponse:
     )
     if form.is_valid():
         publication.delete()
-        return redirect("index")
+        return redirect("affiliated_publications_list")
     else:
         return render(
             request=request,
@@ -294,7 +294,7 @@ def affiliated_publications_list(request: HttpRequest) -> HttpResponse:
     publications: QuerySet[Publication] = (
         Publication.objects.filter(affiliation=user_affiliation).order_by("title").all()
     )
-    per_page: int = 10
+    per_page: int = 9
     paginator: Paginator = Paginator(publications, per_page=per_page)
     page_number: int = request.GET.get("page")
     page_obj: Page = paginator.get_page(page_number)
@@ -302,4 +302,26 @@ def affiliated_publications_list(request: HttpRequest) -> HttpResponse:
         request=request,
         template_name="research/publications/affiliated_publications_list.html",
         context={"page_obj": page_obj, "logged": True},
+    )
+
+
+@login_required
+def publication_details(request: HttpRequest, pk: int) -> HttpResponse:
+    publication: Publication = get_object_or_404(Publication, pk=pk)
+    has_rights: bool = False
+    logged: bool = False
+    if request.user.is_authenticated:
+        logged = True
+        user_affiliation: Affiliation = request.user.userprofile.affiliation
+        if user_affiliation == publication.affiliation:
+            has_rights = True
+
+    return render(
+        request=request,
+        template_name="research/publications/publication_details.html",
+        context={
+            "publication": publication,
+            "logged": logged,
+            "has_rights": has_rights,
+        },
     )

@@ -5,10 +5,20 @@
     <li><a href="{% url 'delete_user' %}">Delete Profile</a></li>
 {% endblock %}
 {% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 m-5">
+        <div class="card">
+        <div class="card-body">
     <p>Username: {{ request.user.username }}</p>
     <p>Full name: {{ user.get_full_name }}</p>
     <p>Bio: {{ user.userprofile.bio }}</p>
     <p>Interests: {{ user.userprofile.interests }}</p>
     <p>Affiliation: {{ user.userprofile.affiliation }}</p>
     <p>Specialization: {{ user.userprofile.specialization }}</p>
+        </div>
+    </div>
+</div>
+</div>
+</div>
 {% endblock %}
