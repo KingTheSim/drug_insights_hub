@@ -59,6 +59,9 @@ class Drug(models.Model):
     )
     description: models.TextField = models.TextField()
 
+    def __str__(self) -> str:
+        return self.proprietary_name
+
 
 class ClinicalTrial(models.Model):
     MAX_TITLE_LENGTH: int = 30

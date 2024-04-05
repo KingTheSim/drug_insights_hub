@@ -18,8 +18,10 @@
             <p>Affiliation: {{ publication.affiliation.name }}</p>
             <p>Publication date: {{ publication.publication_date }}</p>
             <p>Journal: {{ publica.journal }}</p>
+            {% if has_rights %}
             <p><a href="{% url 'publication_update' pk=publication.pk %}" class="btn btn-outline-primary">Update Publication</a></p>
             <p><a href="{% url 'publication_delete' pk=publication.pk %}" class="btn btn-outline-danger">Delete Publication</a></p>
+            {% endif %}
         </div>
       </div>
     </div>
