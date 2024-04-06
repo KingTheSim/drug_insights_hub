@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "drug_insights_hub.accounts.apps.AccountsConfig",
     "drug_insights_hub.core",
     "drug_insights_hub.research",
+    "drug_insights_hub.errors",
 ]
 
 MIDDLEWARE = [

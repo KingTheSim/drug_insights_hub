@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Page, Paginator
 from django.db.models import QuerySet
-from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from drug_insights_hub.accounts.models import Affiliation
@@ -23,7 +23,13 @@ from drug_insights_hub.research.models import ClinicalTrial, Drug, Publication
 @login_required
 def drug_creation(request: HttpRequest) -> HttpResponse:
     form: DrugCreationForm = DrugCreationForm(request.POST or None, user=request.user)
-    affiliation_variable: Affiliation = affiliation_getter(request=request)
+    try:
+        affiliation_variable: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
+
     if form.is_valid():
         drug: Drug = form.save(commit=False)
         drug.affiliated_institution = affiliation_variable
@@ -42,12 +48,26 @@ def drug_creation(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def drug_update(request: HttpRequest, pk: int) -> HttpResponse:
-    drug: Drug = get_object_or_404(Drug, id=pk)
+    try:
+        drug: Drug = get_object_or_404(Drug, id=pk)
+    except Http404:
+        request.session["error_message"] = "Drug not found!"
+        request.session["status_code"] = 404
+        return redirect("error")
 
-    user_affiliation: Affiliation = affiliation_getter(request=request)
+    try:
+        user_affiliation: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
 
     if user_affiliation != drug.affiliated_institution:
-        return HttpResponseForbidden("You do not have permission to update this drug.")
+        request.session["error_message"] = (
+            "Your affiliation doesn't match the drug's affiliation, so you lack permission!"
+        )
+        request.session["status_code"] = 403
+        return redirect("error")
 
     form: DrugUpdateForm = DrugUpdateForm(request.POST or None, instance=drug)
     if form.is_valid():
@@ -63,12 +83,26 @@ def drug_update(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def drug_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    drug: Drug = get_object_or_404(Drug, id=pk)
+    try:
+        drug: Drug = get_object_or_404(Drug, id=pk)
+    except Http404:
+        request.session["error_message"] = "Drug not found!"
+        request.session["status_code"] = 404
+        return redirect("error")
 
-    user_affiliation: Affiliation = affiliation_getter(request=request)
+    try:
+        user_affiliation: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
 
     if user_affiliation != drug.affiliated_institution:
-        return HttpResponseForbidden("You do not have permission to delete this drug.")
+        request.session["error_message"] = (
+            "Your affiliation doesn't match the drug's affiliation, so you lack permission!"
+        )
+        request.session["status_code"] = 403
+        return redirect("error")
 
     form: DrugDeleteForm = DrugDeleteForm(request.POST or None, instance=drug)
     if form.is_valid():
@@ -84,7 +118,13 @@ def drug_delete(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def affiliated_drugs_list(request: HttpRequest) -> HttpResponse:
-    user_affiliation: Affiliation = affiliation_getter(request=request)
+    try:
+        user_affiliation: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
+
     drugs: QuerySet[Drug] = (
         Drug.objects.filter(affiliated_institution=user_affiliation)
         .order_by("proprietary_name")
@@ -102,7 +142,13 @@ def affiliated_drugs_list(request: HttpRequest) -> HttpResponse:
 
 
 def drug_details(request: HttpRequest, pk: int) -> HttpResponse:
-    drug: Drug = get_object_or_404(Drug, pk=pk)
+    try:
+        drug: Drug = get_object_or_404(Drug, pk=pk)
+    except Http404:
+        request.session["error_message"] = "Drug not found!"
+        request.session["status_code"] = 404
+        return redirect("error")
+
     has_rights: bool = False
     logged: bool = False
     if request.user.is_authenticated:
@@ -123,7 +169,13 @@ def clinical_trial_creation(request: HttpRequest) -> HttpResponse:
     form: ClinicalTrialCreationForm = ClinicalTrialCreationForm(
         request.POST or None, user=request.user
     )
-    affiliation_variable: Affiliation = affiliation_getter(request=request)
+    try:
+        affiliation_variable: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
+
     if form.is_valid():
         clinical_trial: ClinicalTrial = form.save(commit=False)
         clinical_trial.affiliation = affiliation_variable
@@ -139,13 +191,26 @@ def clinical_trial_creation(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def clinical_trial_update(request: HttpRequest, pk: int) -> HttpResponse:
-    clinical_trial: ClinicalTrial = get_object_or_404(ClinicalTrial, pk=pk)
-    user_affiliation: Affiliation = affiliation_getter(request=request)
+    try:
+        clinical_trial: ClinicalTrial = get_object_or_404(ClinicalTrial, pk=pk)
+    except Http404:
+        request.session["error_message"] = "Clinical trial not found!"
+        request.session["status_code"] = 404
+        return redirect("error")
+
+    try:
+        user_affiliation: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
 
     if user_affiliation != clinical_trial.affiliation:
-        return HttpResponseForbidden(
-            "You do not have permission to update this clinical trial."
+        request.session["error_message"] = (
+            "Your affiliation doesn't match the clinical trial's affiliation, so you lack permission!"
         )
+        request.session["status_code"] = 403
+        return redirect("error")
 
     form: ClinicalTrialUpdateForm = ClinicalTrialUpdateForm(
         request.POST or None, instance=clinical_trial
@@ -163,13 +228,26 @@ def clinical_trial_update(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def clinical_trial_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    clinical_trial: ClinicalTrial = get_object_or_404(ClinicalTrial, pk=pk)
-    user_affiliation: Affiliation = affiliation_getter(request=request)
+    try:
+        clinical_trial: ClinicalTrial = get_object_or_404(ClinicalTrial, pk=pk)
+    except Http404:
+        request.session["error_message"] = "Clinical trial not found!"
+        request.session["status_code"] = 404
+        return redirect("error")
+
+    try:
+        user_affiliation: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
 
     if user_affiliation != clinical_trial.affiliation:
-        return HttpResponseForbidden(
-            "You do not have permission to delete this clinical trial."
+        request.session["error_message"] = (
+            "Your affiliation doesn't match the clinical trial's affiliation, so you lack permission!"
         )
+        request.session["status_code"] = 403
+        return redirect("error")
 
     form: ClinicalTrialDeleteForm = ClinicalTrialDeleteForm(
         request.POST or None, instance=clinical_trial
@@ -187,7 +265,13 @@ def clinical_trial_delete(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def affiliated_clinical_trials_list(request: HttpRequest) -> HttpResponse:
-    user_affiliation: Affiliation = affiliation_getter(request=request)
+    try:
+        user_affiliation: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
+
     clinical_trials: QuerySet[ClinicalTrial] = (
         ClinicalTrial.objects.filter(affiliation=user_affiliation)
         .order_by("title")
@@ -205,7 +289,13 @@ def affiliated_clinical_trials_list(request: HttpRequest) -> HttpResponse:
 
 
 def clinical_trial_details(request: HttpRequest, pk: int) -> HttpResponse:
-    clinical_trial: ClinicalTrial = get_object_or_404(ClinicalTrial, pk=pk)
+    try:
+        clinical_trial: ClinicalTrial = get_object_or_404(ClinicalTrial, pk=pk)
+    except Http404:
+        request.session["error_message"] = "Clinical trial not found!"
+        request.session["status_code"] = 404
+        return redirect("error")
+
     has_rights: bool = False
     logged: bool = False
     if request.user.is_authenticated:
@@ -230,7 +320,13 @@ def publication_creation(request: HttpRequest) -> HttpResponse:
     form: PublicationCreationForm = PublicationCreationForm(
         request.POST or None, user=request.user
     )
-    affiliation_variable: Affiliation = affiliation_getter(request=request)
+    try:
+        affiliation_variable: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
+
     if form.is_valid():
         publication: Publication = form.save(commit=False)
         publication.affiliation = affiliation_variable
@@ -246,13 +342,26 @@ def publication_creation(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def publication_update(request: HttpRequest, pk: int) -> HttpResponse:
-    publication: Publication = get_object_or_404(Publication, pk=pk)
-    user_affiliation: Affiliation = affiliation_getter(request=request)
+    try:
+        publication: Publication = get_object_or_404(Publication, pk=pk)
+    except Http404:
+        request.session["error_message"] = "Publication not found!"
+        request.session["status_code"] = 404
+        return redirect("error")
+
+    try:
+        user_affiliation: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
 
     if user_affiliation != publication.affiliation:
-        return HttpResponseForbidden(
-            "You do not have permission to update this publication."
+        request.session["error_message"] = (
+            "Your affiliation doesn't match the publication's affiliation, so you lack permission!"
         )
+        request.session["status_code"] = 403
+        return redirect("error")
 
     form: PublicationUpdateForm = PublicationUpdateForm(
         request.POST or None, instance=publication
@@ -270,13 +379,26 @@ def publication_update(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def publication_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    publication: Publication = get_object_or_404(Publication, pk=pk)
-    user_affiliation: Affiliation = affiliation_getter(request=request)
+    try:
+        publication: Publication = get_object_or_404(Publication, pk=pk)
+    except Http404:
+        request.session["error_message"] = "Publication not found!"
+        request.session["status_code"] = 404
+        return redirect("error")
+
+    try:
+        user_affiliation: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
 
     if user_affiliation != publication.affiliation:
-        return HttpResponseForbidden(
-            "You do not have permission to delete this publication."
+        request.session["error_message"] = (
+            "Your affiliation doesn't match the publication's affiliation, so you lack permission!"
         )
+        request.session["status_code"] = 403
+        return redirect("error")
 
     form: PublicationDeleteForm = PublicationDeleteForm(
         request.POST or None, instance=publication
@@ -294,7 +416,13 @@ def publication_delete(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def affiliated_publications_list(request: HttpRequest) -> HttpResponse:
-    user_affiliation: Affiliation = affiliation_getter(request=request)
+    try:
+        user_affiliation: Affiliation = affiliation_getter(request=request)
+    except PermissionDenied as e:
+        request.session["error_message"] = str(e)
+        request.session["status_code"] = 403
+        return redirect("error")
+
     publications: QuerySet[Publication] = (
         Publication.objects.filter(affiliation=user_affiliation).order_by("title").all()
     )
@@ -311,13 +439,19 @@ def affiliated_publications_list(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def publication_details(request: HttpRequest, pk: int) -> HttpResponse:
-    publication: Publication = get_object_or_404(Publication, pk=pk)
+    try:
+        publication: Publication = get_object_or_404(Publication, pk=pk)
+    except Http404:
+        request.session["error_message"] = "Publication not found!"
+        request.session["status_code"] = 404
+        return redirect("error")
+
     has_rights: bool = False
     logged: bool = False
-    affiliation_variable: Affiliation = affiliation_getter(request=request)
+
     if request.user.is_authenticated:
         logged = True
-        user_affiliation: Affiliation = affiliation_variable
+        user_affiliation: Affiliation = request.user.userprofile.affiliation
         if user_affiliation == publication.affiliation:
             has_rights = True
 
@@ -335,6 +469,7 @@ def publication_details(request: HttpRequest, pk: int) -> HttpResponse:
 def affiliation_getter(request: HttpRequest) -> HttpResponse | Affiliation:
     affiliation_result: Affiliation = request.user.userprofile.affiliation
     if affiliation_result is None:
-        raise PermissionDenied("You do not have an affiliation!")
+        raise PermissionDenied("You do not have affiliation!")
+
     else:
         return affiliation_result

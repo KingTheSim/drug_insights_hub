@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include("drug_insights_hub.core.urls")),
     path('accounts/', include('drug_insights_hub.accounts.urls')),
     path('research/', include('drug_insights_hub.research.urls')),
+    path('errors/', include("drug_insights_hub.errors.urls")),
 ]

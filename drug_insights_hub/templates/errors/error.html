@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ status }}{% endblock %}
+{% block content %}
+<section id="services" class="services">
+    <div class="container">
+      <div class="row">
+        <div class="col-6 col-md-4 card">
+            <div class="card-body">
+                <div class="col-10">
+                    <h1 style="color: red;">Error: {{ status }}</h1>
+                    <h1 style="color: red;">{{ error_message }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
