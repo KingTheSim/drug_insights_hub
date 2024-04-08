@@ -103,7 +103,7 @@ class ClinicalTrial(models.Model):
 
 
 class Publication(models.Model):
-    MAX_TITLE_LENGTH: int = 50
+    MAX_TITLE_LENGTH: int = 100
 
     MAX_JOURNAL_LENGTH: int = 30
 
