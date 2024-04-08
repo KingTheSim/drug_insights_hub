@@ -13,7 +13,7 @@ USER_MODEL: Type[User] = get_user_model()
 class Drug(models.Model):
     MAX_PROPRIETARY_NAME_LENGTH: int = 50
 
-    MAX_INTERNATIONAL_NON_PROPRIETARY_NAME_LENGTH: int = 30
+    MAX_INTERNATIONAL_NON_PROPRIETARY_NAME_LENGTH: int = 50
 
     MAX_TYPE_LENGTH: int = 30
     CHOICES_TYPES: tuple = (
@@ -64,7 +64,7 @@ class Drug(models.Model):
 
 
 class ClinicalTrial(models.Model):
-    MAX_TITLE_LENGTH: int = 30
+    MAX_TITLE_LENGTH: int = 50
 
     MAX_PHASE_LENGTH: int = 30
     CHOICES_PHASE_STATUS: tuple = (
@@ -103,7 +103,7 @@ class ClinicalTrial(models.Model):
 
 
 class Publication(models.Model):
-    MAX_TITLE_LENGTH: int = 30
+    MAX_TITLE_LENGTH: int = 50
 
     MAX_JOURNAL_LENGTH: int = 30
 

@@ -30,6 +30,7 @@ class AffiliationAdmin(admin.ModelAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     list_display: Tuple[str, str, str, str] = (
+        "username",
         "bio",
         "interests",
         "specialization",
@@ -47,3 +48,8 @@ class UserProfileAdmin(admin.ModelAdmin):
         "specialization",
         "user",
     )
+
+    def username(self, obj: UserProfile) -> str:
+        return obj.user.username
+
+    username.short_description = "Username"
